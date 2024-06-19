@@ -12,8 +12,8 @@ import noisereduce as nr
 
 sample_rate = 44100  # Sample rate in Hz
 channels = 2         # Stereo recording
-duration = 20        # Duration will be set by user start/stop input
-filename="output.wav"
+duration = 8        # Duration will be set by user start/stop input
+filename="Recordings/output.wav"
 
 
 def record_audio(duration, filename):
