@@ -7,6 +7,11 @@ rock_progressions = {
     'ii-V-I': ['ii', 'V', 'I']
 }
 midi_file= 'Midi_Recordings/output_basic_pitch.mid'
+
+
+key_Signature = None
+
+
 def quantize_melody(melody_stream, rhythmic_grid='16th'):
     # Ensure the melody stream is flat (no nested voices or parts)
     melody_stream = melody_stream.flat
@@ -78,9 +83,10 @@ def analyze_midi_melody(midi_file_path):
     # Analyze the key of the melody
     key_finder = midi_stream.analyze('key')
     key = key_finder
-    mode = key_finder.mode
+  
+    
 
-    key_pitches = [pitch.pitchClass for pitch in key.pitches]
+    key_pitches = [pitch.pitchClass for pitch in key.getScale().getPitches()]
 
     # Correct the pitches of the notes in the original melody
     for element in midi_stream.recurse():
@@ -96,7 +102,7 @@ def analyze_midi_melody(midi_file_path):
 # Function to detect the scale degree of a note
 def get_scale_degree(note, key_signature):
     scale = key_signature.getScale()
-    print(f'Scale: {scale}')
+    
     return scale.getScaleDegreeFromPitch(note.pitch)
 
 
@@ -116,8 +122,9 @@ def harmonize_melody(melody, key_signature, progressions):
                
                 if notes:
                     first_note = notes[0]
+                    print(key_signature)
                     scale_degree = get_scale_degree(first_note, key_signature)
-                    print(scale_degree)
+                    
                     chord_symbol = progression[i]
                     rn = roman.RomanNumeral(chord_symbol, key_signature)
                     if scale_degree == rn.scaleDegree:
@@ -156,8 +163,11 @@ if __name__ == '__main__':
 
     # Harmonize the melody and store the result
     melody_file = converter.parse('Corrected_Recordings/corrected_midi_file.mid')
+
     melody = melody_file.parts[0]  # Assuming the melody is in the first part
-    harmonized_melody = harmonize_melody(melody, key_signature, rock_progressions)
+    key_Signature = melody.analyze('key')
+    print(f'Key signature: {key_Signature}')
+    harmonized_melody = harmonize_melody(melody, key_Signature, rock_progressions)
 
     # Store the harmonized chords in a separate MIDI file
     harmony_score = stream.Score()
