@@ -28,7 +28,7 @@ def record_audio(duration, filename):
 def main():
     
     record_audio(duration, filename)
-    predict_and_save([filename],'',True,False,False,False,model,0.80,0.45)
+    predict_and_save([filename],'',True,False,False,False,model)
 
 
 if __name__ == "__main__":
