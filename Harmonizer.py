@@ -1,34 +1,93 @@
 from music21 import *
 import random
 
-
-# Major and Minor Progressions
-major_progressions = {
-    'ii-V-I': ['ii', 'V', 'I', 'IV'],
-    'I-V-vi-IV': ['I', 'V', 'vi', 'IV'],
-    'I-IV-V': ['I', 'IV', 'V', 'I'],
-    'I-vi-IV-V': ['I', 'vi', 'IV', 'V'],
-    'I-V-IV-I': ['I', 'V', 'IV', 'I'],
-    'vi-IV-I-V': ['vi', 'IV', 'I', 'V'],
-    'I-IV-I-V': ['I', 'IV', 'I', 'V'],
-    'V-I-vi-IV': ['V', 'I', 'vi', 'IV'],
-    'I-V-iii-vi': ['I', 'V', 'iii', 'vi'],
-    'I-IV-vi-V': ['I', 'IV', 'vi', 'V'],
-    'V-I-IV-vi': ['V', 'I', 'IV', 'vi']
+# Define progressions for different genres
+progressions = {
+    'rock': {
+        'major': {
+            'I-V-vi-IV': ['I', 'V', 'vi', 'IV'],
+            'I-IV-V-I': ['I', 'IV', 'V', 'I'],
+            'I-vi-IV-V': ['I', 'vi', 'IV', 'V'],
+            'V-IV-I-V': ['V', 'IV', 'I', 'V']
+        },
+        'minor': {
+            'i-iv-V-i': ['i', 'iv', 'V', 'i'],
+            'i-VI-III-VII': ['i', 'VI', 'III', 'VII'],
+            'i-VII-VI-V': ['i', 'VII', 'VI', 'V'],
+            'i-iv-VI-III': ['i', 'iv', 'VI', 'III']
+        }
+    },
+    'jazz': {
+        'major': {
+            'ii7-V7-Imaj7-vi7': ['ii7', 'V7', 'Imaj7', 'vi7'],
+            'Imaj7-vi7-ii7-V7': ['Imaj7', 'vi7', 'ii7', 'V7'],
+            'Imaj7-IVmaj7-iii7-VI7': ['Imaj7', 'IVmaj7', 'iii7', 'VI7'],
+            'ii7-V7-Imaj7-IVmaj7': ['ii7', 'V7', 'Imaj7', 'IVmaj7']
+        },
+        'minor': {
+            'i7-iv7-V7-i7': ['i7', 'iv7', 'V7', 'i7'],
+            'i7-vi7-ii7-V7': ['i7', 'vi7', 'ii7', 'V7'],
+            'i7-iv7-bVII7-V7': ['i7', 'iv7', 'bVII7', 'V7'],
+            'i7-ii7b5-V7b9-i7': ['i7', 'ii7b5', 'V7b9', 'i7']
+        }
+    },
+    'pop': {
+        'major': {
+            'I-V-vi-IV': ['I', 'V', 'vi', 'IV'],
+            'vi-IV-I-V': ['vi', 'IV', 'I', 'V'],
+            'I-IV-V-I': ['I', 'IV', 'V', 'I'],
+            'I-V-vi-iii': ['I', 'V', 'vi', 'iii']
+        },
+        'minor': {
+            'i-VI-III-VII': ['i', 'VI', 'III', 'VII'],
+            'i-iv-vi-V': ['i', 'iv', 'vi', 'V'],
+            'i-iv-V-i': ['i', 'iv', 'V', 'i'],
+            'i-III-VI-VII': ['i', 'III', 'VI', 'VII']
+        }
+    },
+    'classical': {
+        'major': {
+            'I-IV-V-I': ['I', 'IV', 'V', 'I'],
+            'ii6-V-I-I': ['ii6', 'V', 'I', 'I'],
+            'I-vi-ii-V': ['I', 'vi', 'ii', 'V'],
+            'I-IV-V-viio': ['I', 'IV', 'V', 'viio']
+        },
+        'minor': {
+            'i-iv-V-i': ['i', 'iv', 'V', 'i'],
+            'i-VII-VI-V': ['i', 'VII', 'VI', 'V'],
+            'i-iv-VI-V': ['i', 'iv', 'VI', 'V'],
+            'i-iv-v-i': ['i', 'iv', 'v', 'i']
+        }
+    }
 }
 
-minor_progressions = {
-    'i-iv-V': ['i', 'iv', 'V', 'i'],
-    'i-V-vi-iv': ['i', 'V', 'vi', 'iv'],
-    'i-iv-vi-V': ['i', 'iv', 'vi', 'V'],
-    'V-i-iv-vi': ['V', 'i', 'iv', 'vi'],
-    'vi-iv-i-V': ['vi', 'iv', 'i', 'V']
+# Define rhythmic patterns for different genres
+rhythms = {
+    'rock': [
+        [4],  # Whole note
+        [2, 2],  # Two half notes
+        [1, 1, 1, 1],  # Four quarter notes
+        [1.5, 0.5, 1, 1]  # Dotted quarter, eighth, two quarter notes
+    ],
+    'jazz': [
+        [1.5, 0.5, 1, 1],  # Swing rhythm
+        [2, 2],  # Two half notes
+        [1, 1, 1, 1],  # Four quarter notes
+        [3, 1]  # Dotted half, quarter
+    ],
+    'pop': [
+        [4],  # Whole note
+        [2, 2],  # Two half notes
+        [1, 1, 1, 1],  # Four quarter notes
+        [1, 1.5, 1.5]  # Quarter, dotted quarter, dotted quarter
+    ],
+    'classical': [
+        [4],  # Whole note
+        [2, 2],  # Two half notes
+        [1, 1, 1, 1],  # Four quarter notes
+        [3, 1]  # Dotted half, quarter
+    ]
 }
-midi_file= 'Midi_Recordings/output_basic_pitch.mid'
-
-
-key_Signature = None
-
 
 def quantize_melody(melody_stream, rhythmic_grid='16th'):
     # Ensure the melody stream is flat (no nested voices or parts)
@@ -59,30 +118,32 @@ def quantize_melody(melody_stream, rhythmic_grid='16th'):
             quantized_duration = round(note_or_rest.duration.quarterLength / grid_duration) * grid_duration
 
             # Extend the duration slightly to make it smoother
-            extended_duration = quantized_duration + grid_duration * 0.1
-            new_note = note.Note(note_or_rest.pitch, quarterLength=extended_duration)
+            new_note = note.Note(note_or_rest.pitch, quarterLength=quantized_duration)
             quantized_melody.append(new_note)
         elif isinstance(note_or_rest, note.Rest):
             # For rests, simply append them with their original duration
             quantized_melody.append(note_or_rest)
 
-    # Merge consecutive notes that are within a small threshold of each other
-    merged_melody = stream.Stream()
-    for n in quantized_melody.notes:
-        if merged_melody.notes:
-            last_note = merged_melody.notes[-1]
-            if n.pitch == last_note.pitch and n.offset - last_note.offset <= grid_duration * 0.5:
-                last_note.quarterLength += n.quarterLength
-            else:
-                merged_melody.append(n)
+    # Ensure the quantized melody fits within 4 bars
+    total_duration = sum(note_or_rest.quarterLength for note_or_rest in quantized_melody.notesAndRests)
+    four_bars_duration = 4 * melody_stream.timeSignature.barDuration.quarterLength
+    final_quantized_melody = stream.Stream()
+    current_duration = 0
+    for element in quantized_melody.notesAndRests:
+        if current_duration + element.quarterLength <= four_bars_duration:
+            final_quantized_melody.append(element)
+            current_duration += element.quarterLength
         else:
-            merged_melody.append(n)
+            break
 
-    return merged_melody
+    if current_duration < four_bars_duration:
+        final_quantized_melody.append(note.Rest(quarterLength=four_bars_duration - current_duration))
 
-def correct_melody_and_write_to_midi(melody_stream,time_signature='4/4'):
+    return final_quantized_melody
+
+def correct_melody_and_write_to_midi(melody_stream, time_signature='4/4'):
     melody_quantized = quantize_melody(melody_stream)
-    melody_quantized = melody_stream.flat
+    melody_quantized = melody_quantized.flat
 
     # Create a new stream to hold the melody with measures
     melody_with_bars = stream.Stream()
@@ -115,9 +176,6 @@ def correct_melody_and_write_to_midi(melody_stream,time_signature='4/4'):
 
     return melody_with_bars
 
-  
-
-
 def analyze_midi_melody(midi_file_path):
     # Parse the MIDI file
     midi_stream = converter.parse(midi_file_path)
@@ -143,26 +201,23 @@ def analyze_midi_melody(midi_file_path):
     # Return the corrected melody
     return correct_melody_and_write_to_midi(midi_stream)
 
-
 # Function to detect the scale degree of a note
 def get_scale_degree(note, key_signature):
     scale = key_signature.getScale()
-    
     return scale.getScaleDegreeFromPitch(note.pitch)
 
-
-def harmonize_melody(melody, key_signature, major_progressions, minor_progressions):
+def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
     measures = melody.getElementsByClass('Measure')
     num_measures = len(measures)
-    print(f'Number of measures: {num_measures}')
+    
     best_progression = None
     best_match_count = 0
 
     # Choose the appropriate set of progressions
     if key_signature.mode == 'major':
-        relevant_progressions = major_progressions
+        relevant_progressions = progressions[genre]['major']
     elif key_signature.mode == 'minor':
-        relevant_progressions = minor_progressions
+        relevant_progressions = progressions[genre]['minor']
     else:
         raise ValueError("Key signature mode not recognized.")
 
@@ -181,14 +236,13 @@ def harmonize_melody(melody, key_signature, major_progressions, minor_progressio
                     print(f' (Scale degree: {scale_degree})')
                     chord_symbol = progression[i]
                     rn = roman.RomanNumeral(chord_symbol, key_signature)
-
+                    
                     if scale_degree == rn.scaleDegree:
                         match_count += 2
                     elif first_note.pitch in rn.pitches:
+                        print("hello")
                         match_count += 1
-                print(f'  {chord_symbol}: {rn.scaleDegree} ')
-        print(f'  Match count: {match_count}')
-
+               
         if match_count > best_match_count:
             # If a new best progression is found, update the best_progressions list
             best_match_count = match_count
@@ -207,37 +261,41 @@ def harmonize_melody(melody, key_signature, major_progressions, minor_progressio
     print(f'Match count: {best_match_count}')
 
     harmonized_melody = stream.Part()
+
+    # Get rhythmic patterns for the genre
+    genre_rhythms = rhythms[genre]
+    rhythm_pattern = random.choice(genre_rhythms)
+
     for i, measure in enumerate(measures):
         if i < len(relevant_progressions[best_progression]):
             chord_symbol = relevant_progressions[best_progression][i]
             rn = roman.RomanNumeral(chord_symbol, key_signature)
-            rock_chord = chord.Chord(rn.pitches, quarterLength=4)
-            harmonized_melody.append(rock_chord)
+            
+            # Apply rhythmic pattern to the chord
+            for duration in rhythm_pattern:
+                rock_chord = chord.Chord(rn.pitches, quarterLength=duration)
+                harmonized_melody.append(rock_chord)
         else:
             break
 
-    return harmonized_melody  
-   
-
-        
+    return harmonized_melody
 
 if __name__ == '__main__':
-
-   
+    midi_file = 'Midi_Recordings/output_basic_pitch.mid'
 
     # Store the corrected MIDI file
-    
     adjusted_melody = analyze_midi_melody(midi_file)
-# You can now work with the adjusted_melody object, e.g., save it as a MIDI file
+    # You can now work with the adjusted_melody object, e.g., save it as a MIDI file
     adjusted_melody.write('midi', fp="Corrected_Recordings/corrected_midi_file.mid")
 
     # Harmonize the melody and store the result
     melody_file = converter.parse('Corrected_Recordings/corrected_midi_file.mid')
 
     melody = melody_file.parts[0]  # Assuming the melody is in the first part
-    key_Signature = melody.analyze('key')
-    print(f'Key signature: {key_Signature}')
-    harmonized_melody = harmonize_melody(melody, key_Signature, major_progressions, minor_progressions)
+    key_signature = melody.analyze('key')
+    genre = 'jazz'  # Change this to 'jazz', 'pop', or 'classical' as needed
+    print(f'Key signature: {key_signature}')
+    harmonized_melody = harmonize_melody(melody, key_signature, genre, progressions, rhythms)
 
     # Store the harmonized chords in a separate MIDI file
     harmony_score = stream.Score()
@@ -247,5 +305,3 @@ if __name__ == '__main__':
     harmony_midi_file.open('harmony_midi_file.mid', 'wb')
     harmony_midi_file.write()
     harmony_midi_file.close()
-
-
