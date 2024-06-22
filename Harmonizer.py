@@ -1,6 +1,7 @@
 from music21 import *
 import random
 
+
 # Define progressions for different genres
 progressions = {
     'rock': {
@@ -8,13 +9,25 @@ progressions = {
             'I-V-vi-IV': ['I', 'V', 'vi', 'IV'],
             'I-IV-V-I': ['I', 'IV', 'V', 'I'],
             'I-vi-IV-V': ['I', 'vi', 'IV', 'V'],
-            'V-IV-I-V': ['V', 'IV', 'I', 'V']
+            'V-IV-I-V': ['V', 'IV', 'I', 'V'],
+            'I-iii-vi-IV': ['I', 'iii', 'vi', 'IV'],
+            'I-V-IV-I': ['I', 'V', 'IV', 'I'],
+            'I-vi-iii-V': ['I', 'vi', 'iii', 'V'],
+            'I-V7-IV-I': ['I', 'V7', 'IV', 'I'],
+            'I-IVmaj7-V-I': ['I', 'IVmaj7', 'V', 'I'],
+            'I-vi7-iii-V': ['I', 'vi7', 'iii', 'V']
         },
         'minor': {
             'i-iv-V-i': ['i', 'iv', 'V', 'i'],
             'i-VI-III-VII': ['i', 'VI', 'III', 'VII'],
             'i-VII-VI-V': ['i', 'VII', 'VI', 'V'],
-            'i-iv-VI-III': ['i', 'iv', 'VI', 'III']
+            'i-iv-VI-III': ['i', 'iv', 'VI', 'III'],
+            'i-iii-vi-V': ['i', 'iii', 'vi', 'V'],
+            'i-V-iv-i': ['i', 'V', 'iv', 'i'],
+            'i-vi-III-V': ['i', 'vi', 'III', 'V'],
+            'i-iv7-V-i': ['i', 'iv7', 'V', 'i'],
+            'i-VI7-III-VII': ['i', 'VI7', 'III', 'VII'],
+            'i-VII7-VI-V': ['i', 'VII7', 'VI', 'V']
         }
     },
     'jazz': {
@@ -22,13 +35,25 @@ progressions = {
             'ii7-V7-Imaj7-vi7': ['ii7', 'V7', 'Imaj7', 'vi7'],
             'Imaj7-vi7-ii7-V7': ['Imaj7', 'vi7', 'ii7', 'V7'],
             'Imaj7-IVmaj7-iii7-VI7': ['Imaj7', 'IVmaj7', 'iii7', 'VI7'],
-            'ii7-V7-Imaj7-IVmaj7': ['ii7', 'V7', 'Imaj7', 'IVmaj7']
+            'ii7-V7-Imaj7-IVmaj7': ['ii7', 'V7', 'Imaj7', 'IVmaj7'],
+            'Imaj7-vi7-iii7-ii7': ['Imaj7', 'vi7', 'iii7', 'ii7'],
+            'Imaj7-IVmaj7-VI7-iii7': ['Imaj7', 'IVmaj7', 'VI7', 'iii7'],
+            'ii7-V7-iii7-vi7': ['ii7', 'V7', 'iii7', 'vi7'],
+            'Imaj7-vi7-ii7-V7b9': ['Imaj7', 'vi7', 'ii7', 'V7b9'],
+            'Imaj7-IVmaj7-iii7-VI7alt': ['Imaj7', 'IVmaj7', 'iii7', 'VI7alt'],
+            'ii7-V7-Imaj7-IVmaj7#11': ['ii7', 'V7', 'Imaj7', 'IVmaj7#11']
         },
         'minor': {
             'i7-iv7-V7-i7': ['i7', 'iv7', 'V7', 'i7'],
             'i7-vi7-ii7-V7': ['i7', 'vi7', 'ii7', 'V7'],
             'i7-iv7-bVII7-V7': ['i7', 'iv7', 'bVII7', 'V7'],
-            'i7-ii7b5-V7b9-i7': ['i7', 'ii7b5', 'V7b9', 'i7']
+            'i7-ii7b5-V7b9-i7': ['i7', 'ii7b5', 'V7b9', 'i7'],
+            'i7-vi7-iii7-V7': ['i7', 'vi7', 'iii7', 'V7'],
+            'i7-iv7-VI7-iii7': ['i7', 'iv7', 'VI7', 'iii7'],
+            'i7-ii7-V7-iv7': ['i7', 'ii7', 'V7', 'iv7'],
+            'i7-vi7-ii7-V7#9': ['i7', 'vi7', 'ii7', 'V7#9'],
+            'i7-iv7-bVII7-V7alt': ['i7', 'iv7', 'bVII7', 'V7alt'],
+            'i7-ii7b5-V7b9-i7#11': ['i7', 'ii7b5', 'V7b9', 'i7#11']
         }
     },
     'pop': {
@@ -36,13 +61,25 @@ progressions = {
             'I-V-vi-IV': ['I', 'V', 'vi', 'IV'],
             'vi-IV-I-V': ['vi', 'IV', 'I', 'V'],
             'I-IV-V-I': ['I', 'IV', 'V', 'I'],
-            'I-V-vi-iii': ['I', 'V', 'vi', 'iii']
+            'I-V-vi-iii': ['I', 'V', 'vi', 'iii'],
+            'I-iii-vi-IV': ['I', 'iii', 'vi', 'IV'],
+            'I-V-IV-I': ['I', 'V', 'IV', 'I'],
+            'I-vi-iii-V': ['I', 'vi', 'iii', 'V'],
+            'I-V7-IV-I': ['I', 'V7', 'IV', 'I'],
+            'I-IVmaj7-V-I': ['I', 'IVmaj7', 'V', 'I'],
+            'I-vi7-iii-V': ['I', 'vi7', 'iii', 'V']
         },
         'minor': {
             'i-VI-III-VII': ['i', 'VI', 'III', 'VII'],
             'i-iv-vi-V': ['i', 'iv', 'vi', 'V'],
             'i-iv-V-i': ['i', 'iv', 'V', 'i'],
-            'i-III-VI-VII': ['i', 'III', 'VI', 'VII']
+            'i-III-VI-VII': ['i', 'III', 'VI', 'VII'],
+            'i-vi-III-V': ['i', 'vi', 'III', 'V'],
+            'i-iv-VI-V': ['i', 'iv', 'VI', 'V'],
+            'i-iii-vi-V': ['i', 'iii', 'vi', 'V'],
+            'i-VI7-III-VII': ['i', 'VI7', 'III', 'VII'],
+            'i-iv7-V-i': ['i', 'iv7', 'V', 'i'],
+            'i-VII7-VI-V': ['i', 'VII7', 'VI', 'V']
         }
     },
     'classical': {
@@ -50,17 +87,28 @@ progressions = {
             'I-IV-V-I': ['I', 'IV', 'V', 'I'],
             'ii6-V-I-I': ['ii6', 'V', 'I', 'I'],
             'I-vi-ii-V': ['I', 'vi', 'ii', 'V'],
-            'I-IV-V-viio': ['I', 'IV', 'V', 'viio']
+            'I-IV-V-viio': ['I', 'IV', 'V', 'viio'],
+            'I-iii-vi-IV': ['I', 'iii', 'vi', 'IV'],
+            'I-V-IV-I': ['I', 'V', 'IV', 'I'],
+            'I-vi-iii-V': ['I', 'vi', 'iii', 'V'],
+            'I-IVmaj7-V-I': ['I', 'IVmaj7', 'V', 'I'],
+            'I-vi7-iii-V': ['I', 'vi7', 'iii', 'V'],
+            'I-V7-IV-I': ['I', 'V7', 'IV', 'I']
         },
         'minor': {
             'i-iv-V-i': ['i', 'iv', 'V', 'i'],
             'i-VII-VI-V': ['i', 'VII', 'VI', 'V'],
-            'i-iv-VI-V': ['i', 'iv', 'VI', 'V'],
-            'i-iv-v-i': ['i', 'iv', 'v', 'i']
+            'i-iv-VI-V': ['i', 'iv','VI', 'V'],
+            'i-iv-v-i': ['i', 'iv', 'v', 'i'],
+            'i-iii-vi-V': ['i', 'iii', 'vi', 'V'],
+            'i-V-iv-i': ['i', 'V', 'iv', 'i'],
+            'i-vi-III-V': ['i', 'vi', 'III', 'V'],
+            'i-iv7-V-i': ['i', 'iv7', 'V', 'i'],
+            'i-VII7-VI-V': ['i', 'VII7', 'VI', 'V'],
+            'i-iii-vi-V7': ['i', 'iii', 'vi', 'V7']
         }
     }
 }
-
 # Define rhythmic patterns for different genres
 rhythms = {
     'rock': [
@@ -206,6 +254,23 @@ def get_scale_degree(note, key_signature):
     scale = key_signature.getScale()
     return scale.getScaleDegreeFromPitch(note.pitch)
 
+
+def find_fitting_chord(note, key_signature, genre, progressions):
+    relevant_progressions = progressions[genre][key_signature.mode]
+    fitting_chords = []
+    
+    for progression in relevant_progressions.values():
+        for chord_symbol in progression:
+            rn = roman.RomanNumeral(chord_symbol, key_signature)
+            if note.pitch in rn.pitches or get_scale_degree(note, key_signature) == rn.scaleDegree:
+                fitting_chords.append(rn)
+    
+    if fitting_chords:
+        return random.choice(fitting_chords)
+    return None
+
+ 
+
 def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
     measures = melody.getElementsByClass('Measure')
     num_measures = len(measures)
@@ -225,7 +290,6 @@ def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
     best_progressions = []
 
     for progression_name, progression in relevant_progressions.items():
-        print(f'Checking progression: {progression_name}')
         match_count = 0
         for i, measure in enumerate(measures):
             if i < len(progression):
@@ -233,14 +297,12 @@ def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
                 if notes:
                     first_note = notes[0]
                     scale_degree = get_scale_degree(first_note, key_signature)
-                    print(f' (Scale degree: {scale_degree})')
                     chord_symbol = progression[i]
                     rn = roman.RomanNumeral(chord_symbol, key_signature)
                     
                     if scale_degree == rn.scaleDegree:
                         match_count += 2
                     elif first_note.pitch in rn.pitches:
-                        print("hello")
                         match_count += 1
                
         if match_count > best_match_count:
@@ -253,36 +315,125 @@ def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
 
     if not best_progressions:
         raise ValueError("No suitable chord progression found.")
-    print(f'Best progressions: {best_progressions}')
+    print(best_progressions)
     # Randomly choose one of the best progressions
     best_progression = random.choice(best_progressions)
 
-    print(f'Best progression: {best_progression}')
-    print(f'Match count: {best_match_count}')
-
     harmonized_melody = stream.Part()
-
-    # Get rhythmic patterns for the genre
-    genre_rhythms = rhythms[genre]
-    rhythm_pattern = random.choice(genre_rhythms)
 
     for i, measure in enumerate(measures):
         if i < len(relevant_progressions[best_progression]):
             chord_symbol = relevant_progressions[best_progression][i]
             rn = roman.RomanNumeral(chord_symbol, key_signature)
             
+            new_measure = stream.Measure()
+            
+            
+            for note_or_rest in measure.notesAndRests:
+                if isinstance(note_or_rest, note.Note):
+                    if note_or_rest.pitch not in rn.pitches and get_scale_degree(note_or_rest, key_signature) != rn.scaleDegree:
+                        if random.random() < 0.1:  # 50% chance to replace the chord
+                            fitting_chord = find_fitting_chord(note_or_rest, key_signature, genre, progressions)
+                            if fitting_chord:
+                                rn = fitting_chord
+                            
+                        
+            
             # Apply rhythmic pattern to the chord
+            rhythm_pattern = random.choice(rhythms[genre])
             for duration in rhythm_pattern:
-                rock_chord = chord.Chord(rn.pitches, quarterLength=duration)
-                harmonized_melody.append(rock_chord)
+                harmonized_melody.append(chord.Chord(rn.pitches, quarterLength=duration))
+
+            
+
+            
+            
         else:
             break
 
+
     return harmonized_melody
 
-if __name__ == '__main__':
-    midi_file = 'Midi_Recordings/output_basic_pitch.mid'
 
+def get_passing_note_pitch(bass1, bass2):
+    distance = bass2.midi - bass1.midi
+    if abs(distance) == 2 or abs(distance) == 1:  # Suitable distances for passing notes
+        passing_note_pitch = bass1.midi + (distance // abs(distance))  # Step up or down
+        return pitch.Pitch(midi=passing_note_pitch)
+    return None
+
+def readjust_melody_to_harmony(melody_stream, harmony_stream, rhythmic_grid='16th'):
+    # Ensure the melody stream is flat (no nested voices or parts)
+    melody_stream = melody_stream.flat
+
+    # Ensure the harmony stream is flat (no nested voices or parts)
+    harmony_stream = harmony_stream.flat
+
+    # Create a new stream to hold the readjusted melody
+    readjusted_melody = stream.Stream()
+
+    # Set the time signature for the readjusted melody
+    if melody_stream.timeSignature is not None:
+        readjusted_melody.append(meter.TimeSignature(melody_stream.timeSignature.ratioString))
+
+    # Define the duration of the rhythmic grid
+    grid_duration_map = {
+        '16th': 0.25,  # 16th note duration in quarterLength units
+        '8th': 0.5,    # 8th note duration in quarterLength units
+        'quarter': 1.0 # Quarter note duration in quarterLength units
+    }
+
+    if rhythmic_grid not in grid_duration_map:
+        raise ValueError("Invalid rhythmic grid specified.")
+
+    grid_duration = grid_duration_map[rhythmic_grid]
+
+    # Iterate through the harmony stream and readjust the melody notes
+    harmony_notes_and_rests = list(harmony_stream.notesAndRests)
+    melody_notes_and_rests = list(melody_stream.notesAndRests)
+
+    i = 0
+    for harmony_element in harmony_notes_and_rests:
+        while i < len(melody_notes_and_rests) and melody_notes_and_rests[i].offset < harmony_element.offset:
+            melody_element = melody_notes_and_rests[i]
+            if i + 1 < len(melody_notes_and_rests) and isinstance(melody_element, note.Note) and isinstance(melody_notes_and_rests[i + 1], note.Note) and melody_element.pitch.midi == melody_notes_and_rests[i + 1].pitch.midi:
+                # Combine the two notes into a single note with the combined duration
+                melody_element.quarterLength += melody_notes_and_rests[i + 1].quarterLength
+                i += 1
+            else:
+                # Readjust the melody note to the harmony's rhythmic grid
+                new_offset = round(melody_element.offset / grid_duration) * grid_duration
+                melody_element.offset = new_offset
+                readjusted_melody.append(melody_element)
+            i += 1
+
+    # Append any remaining melody elements
+    while i < len(melody_notes_and_rests):
+        melody_element = melody_notes_and_rests[i]
+        if i + 1 < len(melody_notes_and_rests) and isinstance(melody_element, note.Note) and isinstance(melody_notes_and_rests[i + 1], note.Note) and melody_element.pitch.midi == melody_notes_and_rests[i + 1].pitch.midi:
+            # Combine the two notes into a single note with the combined duration
+            melody_element.quarterLength += melody_notes_and_rests[i + 1].quarterLength
+            i += 1
+        readjusted_melody.append(melody_element)
+        i += 1
+
+    return readjusted_melody   
+
+
+def main(midi_file):
+     # Menu for selecting the genre
+    genre_options = ['rock', 'jazz', 'pop', 'classical']
+    print("Select a genre:")
+    for idx, genre in enumerate(genre_options, 1):
+        print(f"{idx}. {genre}")
+    
+    selected_genre_index = int(input("Enter the number corresponding to your choice: ")) - 1
+    
+    if selected_genre_index < 0 or selected_genre_index >= len(genre_options):
+        print("Invalid selection. Exiting.")
+        return
+
+    genre = genre_options[selected_genre_index]
     # Store the corrected MIDI file
     adjusted_melody = analyze_midi_melody(midi_file)
     # You can now work with the adjusted_melody object, e.g., save it as a MIDI file
@@ -293,8 +444,7 @@ if __name__ == '__main__':
 
     melody = melody_file.parts[0]  # Assuming the melody is in the first part
     key_signature = melody.analyze('key')
-    genre = 'jazz'  # Change this to 'jazz', 'pop', or 'classical' as needed
-    print(f'Key signature: {key_signature}')
+
     harmonized_melody = harmonize_melody(melody, key_signature, genre, progressions, rhythms)
 
     # Store the harmonized chords in a separate MIDI file
@@ -302,6 +452,13 @@ if __name__ == '__main__':
     harmony_score.insert(0, harmonized_melody)
 
     harmony_midi_file = midi.translate.music21ObjectToMidiFile(harmony_score)
-    harmony_midi_file.open('harmony_midi_file.mid', 'wb')
+    harmony_midi_file.open('Harmony_Files/harmony_midi_file.mid', 'wb')
     harmony_midi_file.write()
     harmony_midi_file.close()
+
+    new_melody_stream = readjust_melody_to_harmony(melody_file, harmony_score)
+    new_melody_stream.write('midi', fp="Corrected_Recordings/corrected_midi_file.mid")
+
+
+if __name__ == '__main__':
+    main('Midi_Recordings/recording_1_basic_pitch.mid')
