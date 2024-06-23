@@ -15,7 +15,12 @@ progressions = {
             'I-vi-iii-V': ['I', 'vi', 'iii', 'V'],
             'I-V7-IV-I': ['I', 'V7', 'IV', 'I'],
             'I-IVmaj7-V-I': ['I', 'IVmaj7', 'V', 'I'],
-            'I-vi7-iii-V': ['I', 'vi7', 'iii', 'V']
+            'I-vi7-iii-V': ['I', 'vi7', 'iii', 'V'],
+            'I-IV-vi-IV': ['I', 'IV', 'vi', 'IV'],
+            'V-IV-vi-V': ['V', 'IV', 'vi', 'V'],
+            'I-ii-IV-I': ['I', 'ii', 'IV', 'I'],
+            'I-vi-IV-VI': ['I', 'vi', 'IV', 'VI'],
+            'I-IV-V-vi': ['I', 'IV', 'V', 'vi']
         },
         'minor': {
             'i-iv-V-i': ['i', 'iv', 'V', 'i'],
@@ -27,7 +32,12 @@ progressions = {
             'i-vi-III-V': ['i', 'vi', 'III', 'V'],
             'i-iv7-V-i': ['i', 'iv7', 'V', 'i'],
             'i-VI7-III-VII': ['i', 'VI7', 'III', 'VII'],
-            'i-VII7-VI-V': ['i', 'VII7', 'VI', 'V']
+            'i-VII7-VI-V': ['i', 'VII7', 'VI', 'V'],
+            'i-III-VII-VI': ['i', 'III', 'VII', 'VI'],
+            'i-iv-ii-V': ['i', 'iv', 'ii', 'V'],
+            'i-V-III-iv': ['i', 'V', 'III', 'iv'],
+            'i-vi-VII-III': ['i', 'vi', 'VII', 'III'],
+            'i-ii-VII-V': ['i', 'ii', 'VII', 'V']
         }
     },
     'jazz': {
@@ -41,7 +51,12 @@ progressions = {
             'ii7-V7-iii7-vi7': ['ii7', 'V7', 'iii7', 'vi7'],
             'Imaj7-vi7-ii7-V7b9': ['Imaj7', 'vi7', 'ii7', 'V7b9'],
             'Imaj7-IVmaj7-iii7-VI7alt': ['Imaj7', 'IVmaj7', 'iii7', 'VI7alt'],
-            'ii7-V7-Imaj7-IVmaj7#11': ['ii7', 'V7', 'Imaj7', 'IVmaj7#11']
+            'ii7-V7-Imaj7-IVmaj7#11': ['ii7', 'V7', 'Imaj7', 'IVmaj7#11'],
+            'Imaj7-V7-vi7-ii7': ['Imaj7', 'V7', 'vi7', 'ii7'],
+            'ii7-IVmaj7-Imaj7-V7': ['ii7', 'IVmaj7', 'Imaj7', 'V7'],
+            'Imaj7-iii7-vi7-ii7': ['Imaj7', 'iii7', 'vi7', 'ii7'],
+            'ii7-V7-Imaj7-VI7': ['ii7', 'V7', 'Imaj7', 'VI7'],
+            'Imaj7-vi7-IVmaj7-iii7': ['Imaj7', 'vi7', 'IVmaj7', 'iii7']
         },
         'minor': {
             'i7-iv7-V7-i7': ['i7', 'iv7', 'V7', 'i7'],
@@ -53,7 +68,12 @@ progressions = {
             'i7-ii7-V7-iv7': ['i7', 'ii7', 'V7', 'iv7'],
             'i7-vi7-ii7-V7#9': ['i7', 'vi7', 'ii7', 'V7#9'],
             'i7-iv7-bVII7-V7alt': ['i7', 'iv7', 'bVII7', 'V7alt'],
-            'i7-ii7b5-V7b9-i7#11': ['i7', 'ii7b5', 'V7b9', 'i7#11']
+            'i7-ii7b5-V7b9-i7#11': ['i7', 'ii7b5', 'V7b9', 'i7#11'],
+            'i7-iv7-V7-vi7': ['i7', 'iv7', 'V7', 'vi7'],
+            'i7-VI7-ii7-V7': ['i7', 'VI7', 'ii7', 'V7'],
+            'i7-vi7-V7-iv7': ['i7', 'vi7', 'V7', 'iv7'],
+            'i7-iv7-III7-V7': ['i7', 'iv7', 'III7', 'V7'],
+            'i7-V7-iv7-bVII7': ['i7', 'V7', 'iv7', 'bVII7']
         }
     },
     'pop': {
@@ -67,7 +87,12 @@ progressions = {
             'I-vi-iii-V': ['I', 'vi', 'iii', 'V'],
             'I-V7-IV-I': ['I', 'V7', 'IV', 'I'],
             'I-IVmaj7-V-I': ['I', 'IVmaj7', 'V', 'I'],
-            'I-vi7-iii-V': ['I', 'vi7', 'iii', 'V']
+            'I-vi7-iii-V': ['I', 'vi7', 'iii', 'V'],
+            'I-V-IV-vi': ['I', 'V', 'IV', 'vi'],
+            'I-vi-IV-ii': ['I', 'vi', 'IV', 'ii'],
+            'I-IV-ii-V': ['I', 'IV', 'ii', 'V'],
+            'vi-IV-ii-V': ['vi', 'IV', 'ii', 'V'],
+            'I-iii-IV-ii': ['I', 'iii', 'IV', 'ii']
         },
         'minor': {
             'i-VI-III-VII': ['i', 'VI', 'III', 'VII'],
@@ -79,7 +104,12 @@ progressions = {
             'i-iii-vi-V': ['i', 'iii', 'vi', 'V'],
             'i-VI7-III-VII': ['i', 'VI7', 'III', 'VII'],
             'i-iv7-V-i': ['i', 'iv7', 'V', 'i'],
-            'i-VII7-VI-V': ['i', 'VII7', 'VI', 'V']
+            'i-VII7-VI-V': ['i', 'VII7', 'VI', 'V'],
+            'i-ii7-vi-V': ['i', 'ii7', 'vi', 'V'],
+            'i-vi-ii7-V': ['i', 'vi', 'ii7', 'V'],
+            'i-iv7-vi7-V': ['i', 'iv7', 'vi7', 'V'],
+            'i-iii-vi-ii': ['i', 'iii', 'vi', 'ii'],
+            'i-V-iv7-VII': ['i', 'V', 'iv7', 'VII']
         }
     },
     'classical': {
@@ -93,19 +123,29 @@ progressions = {
             'I-vi-iii-V': ['I', 'vi', 'iii', 'V'],
             'I-IVmaj7-V-I': ['I', 'IVmaj7', 'V', 'I'],
             'I-vi7-iii-V': ['I', 'vi7', 'iii', 'V'],
-            'I-V7-IV-I': ['I', 'V7', 'IV', 'I']
+            'I-V7-IV-I': ['I', 'V7', 'IV', 'I'],
+            'I-ii-V-I': ['I', 'ii', 'V', 'I'],
+            'IV-I-V-vi': ['IV', 'I', 'V', 'vi'],
+            'I-vi-IV-V': ['I', 'vi', 'IV', 'V'],
+            'I-V-vi-ii': ['I', 'V', 'vi', 'ii'],
+            'IV-V-I-ii': ['IV', 'V', 'I', 'ii']
         },
         'minor': {
             'i-iv-V-i': ['i', 'iv', 'V', 'i'],
             'i-VII-VI-V': ['i', 'VII', 'VI', 'V'],
-            'i-iv-VI-V': ['i', 'iv','VI', 'V'],
+            'i-iv-VI-V': ['i', 'iv', 'VI', 'V'],
             'i-iv-v-i': ['i', 'iv', 'v', 'i'],
             'i-iii-vi-V': ['i', 'iii', 'vi', 'V'],
             'i-V-iv-i': ['i', 'V', 'iv', 'i'],
             'i-vi-III-V': ['i', 'vi', 'III', 'V'],
             'i-iv7-V-i': ['i', 'iv7', 'V', 'i'],
             'i-VII7-VI-V': ['i', 'VII7', 'VI', 'V'],
-            'i-iii-vi-V7': ['i', 'iii', 'vi', 'V7']
+            'i-iii-vi-V7': ['i', 'iii', 'vi', 'V7'],
+            'i-V-iv-VI': ['i', 'V', 'iv', 'VI'],
+            'i-VII-V-VI': ['i', 'VII', 'V', 'VI'],
+            'i-iv-VII-vi': ['i', 'iv', 'VII', 'vi'],
+            'i-ii-vi-V': ['i', 'ii', 'vi', 'V'],
+            'i-iv-vi-V7': ['i', 'iv', 'vi', 'V7']
         }
     }
 }
@@ -224,6 +264,17 @@ def correct_melody_and_write_to_midi(melody_stream, time_signature='4/4'):
 
     return melody_with_bars
 
+
+def tune_to_correct_pitch(original_pitch):
+    """
+    Tune the note to the correct pitch. This function assumes A440 tuning.
+    """
+    # In this example, we'll tune the pitch to the nearest whole number in terms of pitch class and octave.
+    # Adjustments can be more sophisticated based on the context or specific tuning requirements.
+    corrected_pitch = pitch.Pitch()
+    corrected_pitch.midi = round(original_pitch.midi)
+    return corrected_pitch
+
 def analyze_midi_melody(midi_file_path):
     # Parse the MIDI file
     midi_stream = converter.parse(midi_file_path)
@@ -238,13 +289,17 @@ def analyze_midi_melody(midi_file_path):
     # Correct the pitches of the notes in the original melody
     for element in midi_stream.recurse():
         if isinstance(element, note.Note):
+            # Tune the note to the correct pitch
+            tuned_pitch = tune_to_correct_pitch(element.pitch)
+            
+            # Update the note with the tuned pitch
+            element.pitch = tuned_pitch
+            
             # Find the closest pitch in the scale
             closest_pitch = min(scale_pitches, key=lambda p: abs(p - element.pitch.pitchClass))
-            # Calculate the octave adjustment
-            octave_adjustment = (element.pitch.octave - 4) + (closest_pitch // 12 - element.pitch.pitchClass // 12)
+            
             # Adjust the pitch
             element.pitch.pitchClass = closest_pitch
-            element.pitch.octave = 4 + octave_adjustment
 
     # Return the corrected melody
     return correct_melody_and_write_to_midi(midi_stream)
@@ -332,7 +387,7 @@ def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
             for note_or_rest in measure.notesAndRests:
                 if isinstance(note_or_rest, note.Note):
                     if note_or_rest.pitch not in rn.pitches and get_scale_degree(note_or_rest, key_signature) != rn.scaleDegree:
-                        if random.random() < 0.1:  # 50% chance to replace the chord
+                        if random.random() < 0.2:  
                             fitting_chord = find_fitting_chord(note_or_rest, key_signature, genre, progressions)
                             if fitting_chord:
                                 rn = fitting_chord
@@ -355,12 +410,7 @@ def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
     return harmonized_melody
 
 
-def get_passing_note_pitch(bass1, bass2):
-    distance = bass2.midi - bass1.midi
-    if abs(distance) == 2 or abs(distance) == 1:  # Suitable distances for passing notes
-        passing_note_pitch = bass1.midi + (distance // abs(distance))  # Step up or down
-        return pitch.Pitch(midi=passing_note_pitch)
-    return None
+
 
 def readjust_melody_to_harmony(melody_stream, harmony_stream, rhythmic_grid='16th'):
     # Ensure the melody stream is flat (no nested voices or parts)
@@ -392,6 +442,8 @@ def readjust_melody_to_harmony(melody_stream, harmony_stream, rhythmic_grid='16t
     # Convert harmony stream to chords
     harmony_chords = harmony_stream.getElementsByClass('Chord')
 
+    
+
     # Iterate through the melody stream and adjust rhythm to harmony
     melody_notes_and_rests = list(melody_stream.notesAndRests)
     harmony_index = 0
@@ -417,6 +469,12 @@ def readjust_melody_to_harmony(melody_stream, harmony_stream, rhythmic_grid='16t
             if melody_element.offset >= harmony_chords[harmony_index].offset:
                 new_offset = round(melody_element.offset / grid_duration) * grid_duration
                 new_offset = max(new_offset, harmony_chords[harmony_index].offset)
+
+                # Ensure melody is higher in octave than harmony
+                harmony_pitch = harmony_chords[harmony_index].root()
+                melody_pitch = melody_element.pitch
+                if melody_pitch < harmony_pitch:
+                    melody_pitch.octave += 1
                 if combined_quarter_length <= 0.5:  # If combined duration is 0.25 or smaller (16th note or smaller)
                     # Extend the duration of the last note in readjusted_melody
                     if readjusted_melody and isinstance(readjusted_melody[-1], note.Note):
@@ -488,8 +546,55 @@ def readjust_melody_to_harmony(melody_stream, harmony_stream, rhythmic_grid='16t
         last_element = readjusted_melody[-1]
         if isinstance(last_element, note.Note) or isinstance(last_element, note.Rest):
             last_element.quarterLength += melody_stream.duration.quarterLength - final_melody.duration.quarterLength
+    
+    
 
     return final_melody
+
+
+def apply_fade_effects(melody_stream, harmony_stream, fade_in_duration=0.4, fade_out_duration=0.4):
+    # Ensure the melody stream is flat (no nested voices or parts)
+    melody_stream = melody_stream.flat
+    
+    # Ensure the harmony stream is flat (no nested voices or parts)
+    harmony_stream = harmony_stream.flat
+    
+    # Apply fade effects to melody stream
+    for m_note in melody_stream.getElementsByClass('Note'):
+        apply_fade_to_note(m_note, fade_in_duration, fade_out_duration)
+    
+    # Apply fade effects to harmony stream
+    for h_note in harmony_stream.getElementsByClass(['Note', 'Chord']):
+        if isinstance(h_note, note.Note):
+            apply_fade_to_note(h_note, fade_in_duration, fade_out_duration)
+        elif isinstance(h_note, chord.Chord):
+            for chord_note in h_note:
+                apply_fade_to_note(chord_note, fade_in_duration, fade_out_duration)
+
+def apply_fade_to_note(note_obj, fade_in_duration, fade_out_duration):
+    start_velocity = 40  # Velocity for fade-in
+    end_velocity = 80    # Maximum velocity before fade-out
+
+    start_offset = note_obj.offset
+    end_offset = start_offset + note_obj.quarterLength
+
+    # Calculate fade-in and fade-out offsets
+    fade_in_start = start_offset
+    fade_in_end = start_offset + fade_in_duration
+    fade_out_start = end_offset - fade_out_duration
+    fade_out_end = end_offset
+
+    # Apply fade-in effect
+    if start_offset <= fade_in_end:
+        fade_in_ratio = min(1.0, (fade_in_end - start_offset) / fade_in_duration)
+        fade_in_velocity = int(start_velocity + fade_in_ratio * (end_velocity - start_velocity))
+        note_obj.volume.velocity = fade_in_velocity
+
+    # Apply fade-out effect
+    if fade_out_start >= start_offset:
+        fade_out_ratio = min(1.0, (end_offset - fade_out_start) / fade_out_duration)
+        fade_out_velocity = int(end_velocity - fade_out_ratio * (end_velocity - start_velocity))
+        note_obj.volume.velocity = fade_out_velocity
 
 def main(midi_file):
      # Menu for selecting the genre
@@ -516,19 +621,23 @@ def main(midi_file):
     melody = melody_file.parts[0]  # Assuming the melody is in the first part
     key_signature = melody.analyze('key')
 
-    harmonized_melody = harmonize_melody(melody, key_signature, genre, progressions, rhythms)
+    harmonized = harmonize_melody(melody, key_signature, genre, progressions, rhythms)
 
     # Store the harmonized chords in a separate MIDI file
     harmony_score = stream.Score()
-    harmony_score.insert(0, harmonized_melody)
+    harmony_score.insert(0, harmonized)
 
+    
+
+    new_melody_stream = readjust_melody_to_harmony(melody_file, harmony_score)
+    
+    apply_fade_effects(new_melody_stream, harmony_score)
+
+    new_melody_stream.write('midi', fp="Corrected_Recordings/corrected_midi_file.mid")
     harmony_midi_file = midi.translate.music21ObjectToMidiFile(harmony_score)
     harmony_midi_file.open('Harmony_Files/harmony_midi_file.mid', 'wb')
     harmony_midi_file.write()
     harmony_midi_file.close()
-
-    new_melody_stream = readjust_melody_to_harmony(melody_file, harmony_score)
-    new_melody_stream.write('midi', fp="Corrected_Recordings/corrected_midi_file.mid")
 
 
 if __name__ == '__main__':
