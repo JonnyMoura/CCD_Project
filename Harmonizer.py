@@ -378,9 +378,10 @@ def readjust_melody_to_harmony(melody_stream, harmony_stream, rhythmic_grid='16t
 
     # Define the duration of the rhythmic grid
     grid_duration_map = {
-        '16th': 0.25,  # 16th note duration in quarterLength units
-        '8th': 0.5,    # 8th note duration in quarterLength units
-        'quarter': 1.0 # Quarter note duration in quarterLength units
+        '16th': 0.25,    # 16th note duration in quarterLength units
+        '8th': 0.5,      # 8th note duration in quarterLength units
+        'quarter': 1.0,  # Quarter note duration in quarterLength units
+        'half': 2.0      # Half note duration in quarterLength units
     }
 
     if rhythmic_grid not in grid_duration_map:
@@ -388,37 +389,107 @@ def readjust_melody_to_harmony(melody_stream, harmony_stream, rhythmic_grid='16t
 
     grid_duration = grid_duration_map[rhythmic_grid]
 
-    # Iterate through the harmony stream and readjust the melody notes
-    harmony_notes_and_rests = list(harmony_stream.notesAndRests)
+    # Convert harmony stream to chords
+    harmony_chords = harmony_stream.getElementsByClass('Chord')
+
+    # Iterate through the melody stream and adjust rhythm to harmony
     melody_notes_and_rests = list(melody_stream.notesAndRests)
+    harmony_index = 0
 
     i = 0
-    for harmony_element in harmony_notes_and_rests:
-        while i < len(melody_notes_and_rests) and melody_notes_and_rests[i].offset < harmony_element.offset:
-            melody_element = melody_notes_and_rests[i]
-            if i + 1 < len(melody_notes_and_rests) and isinstance(melody_element, note.Note) and isinstance(melody_notes_and_rests[i + 1], note.Note) and melody_element.pitch.midi == melody_notes_and_rests[i + 1].pitch.midi:
-                # Combine the two notes into a single note with the combined duration
-                melody_element.quarterLength += melody_notes_and_rests[i + 1].quarterLength
-                i += 1
-            else:
-                # Readjust the melody note to the harmony's rhythmic grid
-                new_offset = round(melody_element.offset / grid_duration) * grid_duration
-                melody_element.offset = new_offset
-                readjusted_melody.append(melody_element)
-            i += 1
-
-    # Append any remaining melody elements
     while i < len(melody_notes_and_rests):
         melody_element = melody_notes_and_rests[i]
-        if i + 1 < len(melody_notes_and_rests) and isinstance(melody_element, note.Note) and isinstance(melody_notes_and_rests[i + 1], note.Note) and melody_element.pitch.midi == melody_notes_and_rests[i + 1].pitch.midi:
-            # Combine the two notes into a single note with the combined duration
-            melody_element.quarterLength += melody_notes_and_rests[i + 1].quarterLength
+
+        if isinstance(melody_element, note.Note):
+            # Calculate the total duration and new offset for grouped notes
+            combined_quarter_length = melody_element.quarterLength
+            combined_offset = melody_element.offset
+
+            # Find subsequent notes that can be combined
+            j = i + 1
+            while (j < len(melody_notes_and_rests) and
+                   isinstance(melody_notes_and_rests[j], note.Note) and
+                   melody_notes_and_rests[j].offset - melody_element.offset < grid_duration):
+                combined_quarter_length += melody_notes_and_rests[j].quarterLength
+                j += 1
+
+            # Append the combined note with adjusted offset
+            if melody_element.offset >= harmony_chords[harmony_index].offset:
+                new_offset = round(melody_element.offset / grid_duration) * grid_duration
+                new_offset = max(new_offset, harmony_chords[harmony_index].offset)
+                if combined_quarter_length <= 0.5:  # If combined duration is 0.25 or smaller (16th note or smaller)
+                    # Extend the duration of the last note in readjusted_melody
+                    if readjusted_melody and isinstance(readjusted_melody[-1], note.Note):
+                        readjusted_melody[-1].quarterLength += combined_quarter_length
+                else:
+                    readjusted_melody.append(note.Note(melody_element.pitch, quarterLength=combined_quarter_length, offset=new_offset))
+            else:
+                readjusted_melody.append(note.Note(melody_element.pitch, quarterLength=combined_quarter_length, offset=melody_element.offset))
+
+            # Move to the next ungrouped note
+            i = j
+
+        elif isinstance(melody_element, note.Rest):
+            # For rests, append them directly
+            readjusted_melody.append(note.Rest(quarterLength=melody_element.quarterLength, offset=melody_element.offset))
             i += 1
-        readjusted_melody.append(melody_element)
-        i += 1
 
-    return readjusted_melody   
+        else:
+            # Handle other elements (such as chords or metadata), append them directly
+            readjusted_melody.append(melody_element)
+            i += 1
 
+    
+
+    # Iterate through the melody stream and adjust rhythm to harmony
+    melody_nested = readjusted_melody
+    harmony_index = 0
+    final_melody=stream.Stream()
+
+    for melody_element in melody_nested:
+        if isinstance(melody_element, note.Note):
+            melody_offset = melody_element.offset
+            melody_pitch = melody_element.pitch
+
+            # Find the corresponding chord in harmony
+            while harmony_index < len(harmony_chords) - 1 and harmony_chords[harmony_index + 1].offset <= melody_offset:
+                harmony_index += 1
+
+            current_chord = harmony_chords[harmony_index]
+            current_chord_offset = current_chord.offset
+
+            # Determine the closest chord strike after melody_offset
+            next_chord_offset = current_chord_offset
+            if harmony_index < len(harmony_chords) - 1:
+                next_chord_offset = harmony_chords[harmony_index + 1].offset
+
+            # Determine the adjusted offset for the melody note
+            if melody_offset >= current_chord_offset:
+                if melody_offset > next_chord_offset - grid_duration:
+                    # If melody_offset is too close to the next chord, align with the next chord
+                    new_offset = next_chord_offset
+                else:
+                    # Otherwise, quantize to the nearest grid_duration within the chord bounds
+                    new_offset = round(melody_offset / grid_duration) * grid_duration
+                    new_offset = max(new_offset, current_chord_offset)  # Ensure it doesn't go before current chord
+
+                # Append the adjusted note to the readjusted melody
+                final_melody.append(note.Note(melody_pitch, quarterLength=melody_element.quarterLength, offset=new_offset))
+            else:
+                # If melody note is before the first chord, append as is
+                final_melody.append(note.Note(melody_pitch, quarterLength=melody_element.quarterLength, offset=melody_offset))
+
+        elif isinstance(melody_element, note.Rest):
+            # For rests, append them directly
+            final_melody.append(note.Rest(quarterLength=melody_element.quarterLength, offset=melody_element.offset))
+
+    # Adjust the duration of readjusted_melody to match melody_stream
+    if final_melody.duration.quarterLength < melody_stream.duration.quarterLength:
+        last_element = readjusted_melody[-1]
+        if isinstance(last_element, note.Note) or isinstance(last_element, note.Rest):
+            last_element.quarterLength += melody_stream.duration.quarterLength - final_melody.duration.quarterLength
+
+    return final_melody
 
 def main(midi_file):
      # Menu for selecting the genre
