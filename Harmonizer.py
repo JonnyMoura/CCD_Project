@@ -349,10 +349,8 @@ def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
 
     if not best_progressions:
         raise ValueError("No suitable chord progression found.")
-    print(best_progressions)
 
     best_progression = random.choice(best_progressions)
-
     harmonized_melody = stream.Part()
 
     for i, measure in enumerate(measures):
