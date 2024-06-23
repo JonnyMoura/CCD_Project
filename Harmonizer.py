@@ -2,9 +2,10 @@ from music21 import *
 import random
 
 
-# Define progressions for different genres
+#### Dataset of Progressions ####
+
 progressions = {
-    'rock': {
+    'Rock': {
         'major': {
             'I-V-vi-IV': ['I', 'V', 'vi', 'IV'],
             'I-IV-V-I': ['I', 'IV', 'V', 'I'],
@@ -40,7 +41,7 @@ progressions = {
             'i-ii-VII-V': ['i', 'ii', 'VII', 'V']
         }
     },
-    'jazz': {
+    'Jazz': {
         'major': {
             'ii7-V7-Imaj7-vi7': ['ii7', 'V7', 'Imaj7', 'vi7'],
             'Imaj7-vi7-ii7-V7': ['Imaj7', 'vi7', 'ii7', 'V7'],
@@ -76,7 +77,7 @@ progressions = {
             'i7-V7-iv7-bVII7': ['i7', 'V7', 'iv7', 'bVII7']
         }
     },
-    'pop': {
+    'Pop': {
         'major': {
             'I-V-vi-IV': ['I', 'V', 'vi', 'IV'],
             'vi-IV-I-V': ['vi', 'IV', 'I', 'V'],
@@ -112,7 +113,7 @@ progressions = {
             'i-V-iv7-VII': ['i', 'V', 'iv7', 'VII']
         }
     },
-    'classical': {
+    'Classical': {
         'major': {
             'I-IV-V-I': ['I', 'IV', 'V', 'I'],
             'ii6-V-I-I': ['ii6', 'V', 'I', 'I'],
@@ -149,50 +150,52 @@ progressions = {
         }
     }
 }
-# Define rhythmic patterns for different genres
+
+#### Dataset of Rhythms ####
+#### Rhythms to be used in the Harmony blocks #####
+
 rhythms = {
-    'rock': [
-        [4],  # Whole note
-        [2, 2],  # Two half notes
-        [1, 1, 1, 1],  # Four quarter notes
-        [1.5, 0.5, 1, 1]  # Dotted quarter, eighth, two quarter notes
+    'Rock': [
+        [4],  ## Whole note
+        [2, 2],  ## Two half notes
+        [1, 1, 1, 1],  ## Four quarter notes
+        [1.5, 0.5, 1, 1]  ## Dotted quarter, eighth, two quarter notes
     ],
-    'jazz': [
-        [1.5, 0.5, 1, 1],  # Swing rhythm
-        [2, 2],  # Two half notes
-        [1, 1, 1, 1],  # Four quarter notes
-        [3, 1]  # Dotted half, quarter
+    'Jazz': [
+        [1.5, 0.5, 1, 1],  ## Swing rhythm
+        [2, 2],  ## Two half notes
+        [1, 1, 1, 1],  ## Four quarter notes
+        [3, 1]  ## Dotted half, quarter
     ],
-    'pop': [
-        [4],  # Whole note
-        [2, 2],  # Two half notes
-        [1, 1, 1, 1],  # Four quarter notes
-        [1, 1.5, 1.5]  # Quarter, dotted quarter, dotted quarter
+    'Pop': [
+        [4],  ## Whole note
+        [2, 2],  ## Two half notes
+        [1, 1, 1, 1],  ## Four quarter notes
+        [1, 1.5, 1.5]  ## Quarter, dotted quarter, dotted quarter
     ],
-    'classical': [
-        [4],  # Whole note
-        [2, 2],  # Two half notes
-        [1, 1, 1, 1],  # Four quarter notes
-        [3, 1]  # Dotted half, quarter
+    'Classical': [
+        [4],  ## Whole note
+        [2, 2],  ## Two half notes
+        [1, 1, 1, 1],  ## Four quarter notes
+        [3, 1]  ## Dotted half, quarter
     ]
 }
 
-def quantize_melody(melody_stream, rhythmic_grid='16th'):
-    # Ensure the melody stream is flat (no nested voices or parts)
-    melody_stream = melody_stream.flat
+### First Quantization Step, align the melody of the original recording to the grid of 16th  ###
 
-    # Create a new stream to hold the quantized melody
+
+def quantize_melody(melody_stream, rhythmic_grid='16th'):
+
+    melody_stream = melody_stream.flat
     quantized_melody = stream.Stream()
 
-    # Set the time signature for the quantized melody
     if melody_stream.timeSignature is not None:
         quantized_melody.append(meter.TimeSignature(melody_stream.timeSignature.ratioString))
 
-    # Define the duration of the rhythmic grid
     grid_duration_map = {
-        '16th': 0.25,  # 16th note duration in quarterLength units
-        '8th': 0.5,    # 8th note duration in quarterLength units
-        'quarter': 1.0 # Quarter note duration in quarterLength units
+        '16th': 0.25,  ## 16th note duration in quarterLength units
+        '8th': 0.5,    ## 8th note duration in quarterLength units
+        'quarter': 1.0  ## Quarter note duration in quarterLength units
     }
 
     if rhythmic_grid not in grid_duration_map:
@@ -202,17 +205,15 @@ def quantize_melody(melody_stream, rhythmic_grid='16th'):
 
     for note_or_rest in melody_stream.notesAndRests:
         if isinstance(note_or_rest, note.Note):
-            # Quantize the note duration to the nearest rhythmic grid duration
+            #### Quantize the note duration to the nearest rhythmic grid duration
             quantized_duration = round(note_or_rest.duration.quarterLength / grid_duration) * grid_duration
-
-            # Extend the duration slightly to make it smoother
             new_note = note.Note(note_or_rest.pitch, quarterLength=quantized_duration)
             quantized_melody.append(new_note)
         elif isinstance(note_or_rest, note.Rest):
-            # For rests, simply append them with their original duration
+
             quantized_melody.append(note_or_rest)
 
-    # Ensure the quantized melody fits within 4 bars
+    ### Make the melody still fit in 4 bars
     total_duration = sum(note_or_rest.quarterLength for note_or_rest in quantized_melody.notesAndRests)
     four_bars_duration = 4 * melody_stream.timeSignature.barDuration.quarterLength
     final_quantized_melody = stream.Stream()
@@ -229,111 +230,89 @@ def quantize_melody(melody_stream, rhythmic_grid='16th'):
 
     return final_quantized_melody
 
-def correct_melody_and_write_to_midi(melody_stream, time_signature='4/4'):
+
+### Function to make sure the new melody still fits in 4 bars ###
+
+def correct_melody(melody_stream, time_signature='4/4'):
     melody_quantized = quantize_melody(melody_stream)
     melody_quantized = melody_quantized.flat
-
-    # Create a new stream to hold the melody with measures
     melody_with_bars = stream.Stream()
-
-    # Set the time signature for the melody
     melody_with_bars.append(meter.TimeSignature(time_signature))
 
     # Variables to track current measure and its accumulated length
     current_measure = stream.Measure()
     current_measure_length = 0
 
-    # Iterate through notes in the melody stream
     for note_or_rest in melody_quantized.notesAndRests:
-        # Append notes and rests to current measure
+
         current_measure.append(note_or_rest)
         current_measure_length += note_or_rest.duration.quarterLength
 
-        # If the current measure reaches the time signature's length (e.g., 4 beats for 4/4)
+        # If the current measure reaches the time signature's length (4/4)
         if current_measure_length >= meter.TimeSignature(time_signature).barDuration.quarterLength:
-            # Add the current measure to the melody with bars stream
             melody_with_bars.append(current_measure)
-
-            # Create a new measure
             current_measure = stream.Measure()
             current_measure_length = 0
 
-    # Add the last measure if it contains notes or rests
     if current_measure_length > 0:
         melody_with_bars.append(current_measure)
 
     return melody_with_bars
 
+### Tune notes to the right pitch in A440 Hz Tuning ###
 
-def tune_to_correct_pitch(original_pitch):
-    """
-    Tune the note to the correct pitch. This function assumes A440 tuning.
-    """
-    # In this example, we'll tune the pitch to the nearest whole number in terms of pitch class and octave.
-    # Adjustments can be more sophisticated based on the context or specific tuning requirements.
+def pitch_correction(original_pitch):
     corrected_pitch = pitch.Pitch()
     corrected_pitch.midi = round(original_pitch.midi)
     return corrected_pitch
 
-def analyze_midi_melody(midi_file_path):
-    # Parse the MIDI file
-    midi_stream = converter.parse(midi_file_path)
+### Function to correct the scale of the melody, ensuring every note is on the scale ###
 
-    # Analyze the key of the melody
-    key_finder = midi_stream.analyze('key')
-    key = key_finder
-  
-    # Get the scale pitches
+def scale_correction(midi_file_path):
+    midi_stream = converter.parse(midi_file_path)
+    key = midi_stream.analyze('key')
     scale_pitches = [pitch.pitchClass for pitch in key.getScale().getPitches()]
 
-    # Correct the pitches of the notes in the original melody
+    ### Correct the pitches of the notes in the original melody
     for element in midi_stream.recurse():
         if isinstance(element, note.Note):
-            # Tune the note to the correct pitch
-            tuned_pitch = tune_to_correct_pitch(element.pitch)
-            
-            # Update the note with the tuned pitch
+            tuned_pitch = pitch_correction(element.pitch)
             element.pitch = tuned_pitch
-            
-            # Find the closest pitch in the scale
             closest_pitch = min(scale_pitches, key=lambda p: abs(p - element.pitch.pitchClass))
-            
-            # Adjust the pitch
             element.pitch.pitchClass = closest_pitch
 
-    # Return the corrected melody
-    return correct_melody_and_write_to_midi(midi_stream)
+    return correct_melody(midi_stream)
 
-# Function to detect the scale degree of a note
+
+#### Function to detect the scale degree of a note ###
 def get_scale_degree(note, key_signature):
     scale = key_signature.getScale()
     return scale.getScaleDegreeFromPitch(note.pitch)
 
+### Function to find a fitting chord for a given note ###
 
 def find_fitting_chord(note, key_signature, genre, progressions):
     relevant_progressions = progressions[genre][key_signature.mode]
     fitting_chords = []
-    
+
     for progression in relevant_progressions.values():
         for chord_symbol in progression:
             rn = roman.RomanNumeral(chord_symbol, key_signature)
             if note.pitch in rn.pitches or get_scale_degree(note, key_signature) == rn.scaleDegree:
                 fitting_chords.append(rn)
-    
+
     if fitting_chords:
         return random.choice(fitting_chords)
     return None
 
- 
+### Function that harmonizes a melody based on a given genre, key signature ###
 
 def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
     measures = melody.getElementsByClass('Measure')
-    num_measures = len(measures)
-    
+
     best_progression = None
     best_match_count = 0
 
-    # Choose the appropriate set of progressions
     if key_signature.mode == 'major':
         relevant_progressions = progressions[genre]['major']
     elif key_signature.mode == 'minor':
@@ -341,7 +320,7 @@ def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
     else:
         raise ValueError("Key signature mode not recognized.")
 
-    # List to store progressions with the highest match count
+    ### List to store progressions with the highest match count
     best_progressions = []
 
     for progression_name, progression in relevant_progressions.items():
@@ -354,24 +333,24 @@ def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
                     scale_degree = get_scale_degree(first_note, key_signature)
                     chord_symbol = progression[i]
                     rn = roman.RomanNumeral(chord_symbol, key_signature)
-                    
-                    if scale_degree == rn.scaleDegree:
+
+                    if scale_degree == rn.scaleDegree:  ### If note corresponds to the scale degree of the chord
                         match_count += 2
-                    elif first_note.pitch in rn.pitches:
+                    elif first_note.pitch in rn.pitches:  ### If note is in the chord
                         match_count += 1
-               
+
         if match_count > best_match_count:
-            # If a new best progression is found, update the best_progressions list
+
             best_match_count = match_count
             best_progressions = [progression_name]
         elif match_count == best_match_count:
-            # If multiple progressions have the same match count, add them to the list
+            ### If multiple progressions have the same match count, add them to the list
             best_progressions.append(progression_name)
 
     if not best_progressions:
         raise ValueError("No suitable chord progression found.")
     print(best_progressions)
-    # Randomly choose one of the best progressions
+
     best_progression = random.choice(best_progressions)
 
     harmonized_melody = stream.Part()
@@ -380,58 +359,41 @@ def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
         if i < len(relevant_progressions[best_progression]):
             chord_symbol = relevant_progressions[best_progression][i]
             rn = roman.RomanNumeral(chord_symbol, key_signature)
-            
-            new_measure = stream.Measure()
-            
-            
+
             for note_or_rest in measure.notesAndRests:
                 if isinstance(note_or_rest, note.Note):
                     if note_or_rest.pitch not in rn.pitches and get_scale_degree(note_or_rest, key_signature) != rn.scaleDegree:
-                        if random.random() < 0.2:  
+                        if random.random() < 0.2:  ### Replacing one chord of the progression with a random chord that fits
                             fitting_chord = find_fitting_chord(note_or_rest, key_signature, genre, progressions)
                             if fitting_chord:
                                 rn = fitting_chord
-                            
-                        
-            
-            # Apply rhythmic pattern to the chord
+
+            ### Apply a rhythmic pattern to the chord that has been chosen randomly
             rhythm_pattern = random.choice(rhythms[genre])
             for duration in rhythm_pattern:
                 harmonized_melody.append(chord.Chord(rn.pitches, quarterLength=duration))
 
-            
-
-            
-            
         else:
             break
 
-
     return harmonized_melody
 
+### Function to readjust the melody to the harmony, to avoid clashing with the harmony ###
 
+def readjust_melody(melody_stream, harmony_stream, rhythmic_grid='8th'):
 
-
-def readjust_melody_to_harmony(melody_stream, harmony_stream, rhythmic_grid='16th'):
-    # Ensure the melody stream is flat (no nested voices or parts)
     melody_stream = melody_stream.flat
-
-    # Ensure the harmony stream is flat (no nested voices or parts)
     harmony_stream = harmony_stream.flat
-
-    # Create a new stream to hold the readjusted melody
     readjusted_melody = stream.Stream()
 
-    # Set the time signature for the readjusted melody
     if melody_stream.timeSignature is not None:
         readjusted_melody.append(meter.TimeSignature(melody_stream.timeSignature.ratioString))
 
-    # Define the duration of the rhythmic grid
     grid_duration_map = {
-        '16th': 0.25,    # 16th note duration in quarterLength units
-        '8th': 0.5,      # 8th note duration in quarterLength units
-        'quarter': 1.0,  # Quarter note duration in quarterLength units
-        'half': 2.0      # Half note duration in quarterLength units
+        '16th': 0.25,    ## 16th note duration in quarterLength units
+        '8th': 0.5,      ## 8th note duration in quarterLength units
+        'quarter': 1.0,  ## Quarter note duration in quarterLength units
+
     }
 
     if rhythmic_grid not in grid_duration_map:
@@ -439,12 +401,9 @@ def readjust_melody_to_harmony(melody_stream, harmony_stream, rhythmic_grid='16t
 
     grid_duration = grid_duration_map[rhythmic_grid]
 
-    # Convert harmony stream to chords
     harmony_chords = harmony_stream.getElementsByClass('Chord')
 
-    
-
-    # Iterate through the melody stream and adjust rhythm to harmony
+    ### Iterate through the melody stream and adjust rhythm to harmony
     melody_notes_and_rests = list(melody_stream.notesAndRests)
     harmony_index = 0
 
@@ -453,30 +412,26 @@ def readjust_melody_to_harmony(melody_stream, harmony_stream, rhythmic_grid='16t
         melody_element = melody_notes_and_rests[i]
 
         if isinstance(melody_element, note.Note):
-            # Calculate the total duration and new offset for grouped notes
-            combined_quarter_length = melody_element.quarterLength
-            combined_offset = melody_element.offset
 
-            # Find subsequent notes that can be combined
+            combined_quarter_length = melody_element.quarterLength
+
+            #### Find sequence of notes to be combined
             j = i + 1
-            while (j < len(melody_notes_and_rests) and
-                   isinstance(melody_notes_and_rests[j], note.Note) and
-                   melody_notes_and_rests[j].offset - melody_element.offset < grid_duration):
+            while (j < len(melody_notes_and_rests) and isinstance(melody_notes_and_rests[j], note.Note) and melody_notes_and_rests[j].offset - melody_element.offset < grid_duration):
                 combined_quarter_length += melody_notes_and_rests[j].quarterLength
                 j += 1
 
-            # Append the combined note with adjusted offset
+            ### Append the combined note with adjusted offset
             if melody_element.offset >= harmony_chords[harmony_index].offset:
                 new_offset = round(melody_element.offset / grid_duration) * grid_duration
                 new_offset = max(new_offset, harmony_chords[harmony_index].offset)
 
-                # Ensure melody is higher in octave than harmony
                 harmony_pitch = harmony_chords[harmony_index].root()
                 melody_pitch = melody_element.pitch
                 if melody_pitch < harmony_pitch:
-                    melody_pitch.octave += 1
-                if combined_quarter_length <= 0.5:  # If combined duration is 0.25 or smaller (16th note or smaller)
-                    # Extend the duration of the last note in readjusted_melody
+                    melody_pitch.octave += 1  ### Ensuring melody is higher in octave than harmony
+                ### If combined duration is 0.5 or smaller (8th note or smaller)
+                if combined_quarter_length <= 0.5:
                     if readjusted_melody and isinstance(readjusted_melody[-1], note.Note):
                         readjusted_melody[-1].quarterLength += combined_quarter_length
                 else:
@@ -484,86 +439,76 @@ def readjust_melody_to_harmony(melody_stream, harmony_stream, rhythmic_grid='16t
             else:
                 readjusted_melody.append(note.Note(melody_element.pitch, quarterLength=combined_quarter_length, offset=melody_element.offset))
 
-            # Move to the next ungrouped note
             i = j
 
         elif isinstance(melody_element, note.Rest):
-            # For rests, append them directly
+
             readjusted_melody.append(note.Rest(quarterLength=melody_element.quarterLength, offset=melody_element.offset))
             i += 1
 
         else:
-            # Handle other elements (such as chords or metadata), append them directly
+
             readjusted_melody.append(melody_element)
             i += 1
 
-    
-
-    # Iterate through the melody stream and adjust rhythm to harmony
+    ### Iterate through the melody stream and adjust rhythm to harmony
     melody_nested = readjusted_melody
     harmony_index = 0
-    final_melody=stream.Stream()
+    final_melody = stream.Stream()
 
     for melody_element in melody_nested:
         if isinstance(melody_element, note.Note):
             melody_offset = melody_element.offset
             melody_pitch = melody_element.pitch
 
-            # Find the corresponding chord in harmony
+            ### Find the corresponding chord in harmony
             while harmony_index < len(harmony_chords) - 1 and harmony_chords[harmony_index + 1].offset <= melody_offset:
                 harmony_index += 1
 
             current_chord = harmony_chords[harmony_index]
             current_chord_offset = current_chord.offset
 
-            # Determine the closest chord strike after melody_offset
             next_chord_offset = current_chord_offset
             if harmony_index < len(harmony_chords) - 1:
                 next_chord_offset = harmony_chords[harmony_index + 1].offset
 
-            # Determine the adjusted offset for the melody note
+            ### Determine the adjusted offset for the melody note
             if melody_offset >= current_chord_offset:
                 if melody_offset > next_chord_offset - grid_duration:
-                    # If melody_offset is too close to the next chord, align with the next chord
+                    #### If melody_offset is too close to the next chord, align with the next chord
                     new_offset = next_chord_offset
                 else:
-                    # Otherwise, quantize to the nearest grid_duration within the chord bounds
+                    ### Otherwise, quantize to the nearest grid_duration within the chord bounds
                     new_offset = round(melody_offset / grid_duration) * grid_duration
-                    new_offset = max(new_offset, current_chord_offset)  # Ensure it doesn't go before current chord
+                    new_offset = max(new_offset, current_chord_offset)
 
-                # Append the adjusted note to the readjusted melody
                 final_melody.append(note.Note(melody_pitch, quarterLength=melody_element.quarterLength, offset=new_offset))
             else:
-                # If melody note is before the first chord, append as is
                 final_melody.append(note.Note(melody_pitch, quarterLength=melody_element.quarterLength, offset=melody_offset))
 
         elif isinstance(melody_element, note.Rest):
-            # For rests, append them directly
             final_melody.append(note.Rest(quarterLength=melody_element.quarterLength, offset=melody_element.offset))
 
-    # Adjust the duration of readjusted_melody to match melody_stream
+    ### Making sure duration of the final melody is the same as the original melody
     if final_melody.duration.quarterLength < melody_stream.duration.quarterLength:
         last_element = readjusted_melody[-1]
         if isinstance(last_element, note.Note) or isinstance(last_element, note.Rest):
             last_element.quarterLength += melody_stream.duration.quarterLength - final_melody.duration.quarterLength
-    
-    
 
     return final_melody
 
+### Functions to apply fade effects to the melody and harmony streams ###
 
 def apply_fade_effects(melody_stream, harmony_stream, fade_in_duration=0.4, fade_out_duration=0.4):
-    # Ensure the melody stream is flat (no nested voices or parts)
+
     melody_stream = melody_stream.flat
-    
-    # Ensure the harmony stream is flat (no nested voices or parts)
     harmony_stream = harmony_stream.flat
-    
-    # Apply fade effects to melody stream
+
+    #### Applying fade effects to melody stream
     for m_note in melody_stream.getElementsByClass('Note'):
         apply_fade_to_note(m_note, fade_in_duration, fade_out_duration)
-    
-    # Apply fade effects to harmony stream
+
+    #### Applying fade effects to harmony stream
     for h_note in harmony_stream.getElementsByClass(['Note', 'Chord']):
         if isinstance(h_note, note.Note):
             apply_fade_to_note(h_note, fade_in_duration, fade_out_duration)
@@ -571,73 +516,61 @@ def apply_fade_effects(melody_stream, harmony_stream, fade_in_duration=0.4, fade
             for chord_note in h_note:
                 apply_fade_to_note(chord_note, fade_in_duration, fade_out_duration)
 
+
 def apply_fade_to_note(note_obj, fade_in_duration, fade_out_duration):
-    start_velocity = 40  # Velocity for fade-in
-    end_velocity = 80    # Maximum velocity before fade-out
+    start_velocity = 40
+    end_velocity = 80
 
     start_offset = note_obj.offset
     end_offset = start_offset + note_obj.quarterLength
 
-    # Calculate fade-in and fade-out offsets
     fade_in_start = start_offset
     fade_in_end = start_offset + fade_in_duration
     fade_out_start = end_offset - fade_out_duration
     fade_out_end = end_offset
 
-    # Apply fade-in effect
     if start_offset <= fade_in_end:
         fade_in_ratio = min(1.0, (fade_in_end - start_offset) / fade_in_duration)
         fade_in_velocity = int(start_velocity + fade_in_ratio * (end_velocity - start_velocity))
         note_obj.volume.velocity = fade_in_velocity
 
-    # Apply fade-out effect
     if fade_out_start >= start_offset:
         fade_out_ratio = min(1.0, (end_offset - fade_out_start) / fade_out_duration)
         fade_out_velocity = int(end_velocity - fade_out_ratio * (end_velocity - start_velocity))
         note_obj.volume.velocity = fade_out_velocity
 
+
 def main(midi_file):
-     # Menu for selecting the genre
-    genre_options = ['rock', 'jazz', 'pop', 'classical']
+
+    genre_options = ['Rock', 'Jazz', 'Pop', 'Classical']
     print("Select a genre:")
     for idx, genre in enumerate(genre_options, 1):
         print(f"{idx}. {genre}")
-    
-    selected_genre_index = int(input("Enter the number corresponding to your choice: ")) - 1
-    
+
+    selected_genre_index = int(
+        input("Enter the number corresponding to your choice: ")) - 1
+
     if selected_genre_index < 0 or selected_genre_index >= len(genre_options):
         print("Invalid selection. Exiting.")
         return
 
     genre = genre_options[selected_genre_index]
-    # Store the corrected MIDI file
-    adjusted_melody = analyze_midi_melody(midi_file)
-    # You can now work with the adjusted_melody object, e.g., save it as a MIDI file
-    adjusted_melody.write('midi', fp="Corrected_Recordings/corrected_midi_file.mid")
 
-    # Harmonize the melody and store the result
-    melody_file = converter.parse('Corrected_Recordings/corrected_midi_file.mid')
+    adjusted_melody = scale_correction(midi_file)
 
-    melody = melody_file.parts[0]  # Assuming the melody is in the first part
+    melody = adjusted_melody
     key_signature = melody.analyze('key')
 
     harmonized = harmonize_melody(melody, key_signature, genre, progressions, rhythms)
-
-    # Store the harmonized chords in a separate MIDI file
     harmony_score = stream.Score()
     harmony_score.insert(0, harmonized)
 
-    
+    new_melody_stream = readjust_melody(melody, harmony_score)
 
-    new_melody_stream = readjust_melody_to_harmony(melody_file, harmony_score)
-    
     apply_fade_effects(new_melody_stream, harmony_score)
 
     new_melody_stream.write('midi', fp="Corrected_Recordings/corrected_midi_file.mid")
-    harmony_midi_file = midi.translate.music21ObjectToMidiFile(harmony_score)
-    harmony_midi_file.open('Harmony_Files/harmony_midi_file.mid', 'wb')
-    harmony_midi_file.write()
-    harmony_midi_file.close()
+    harmony_score.write('midi', fp="Harmony_Files/harmony_midi_file.mid")
 
 
 if __name__ == '__main__':
