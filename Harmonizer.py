@@ -1,6 +1,10 @@
 from music21 import *
 import random
-
+import time
+import rtmidi
+import mido
+from mido import MidiFile
+import threading 
 
 #### Dataset of Progressions ####
 
@@ -552,6 +556,12 @@ def apply_fade_to_note(note_obj, fade_in_duration, fade_out_duration):
 
     note_obj.volume.velocity = current_velocity
 
+def send_midi_to_ableton(midi_file_path, midiout):
+    mid = MidiFile(midi_file_path)
+    for msg in mid.play():
+        if not msg.is_meta:
+            midiout.send_message(msg.bytes())
+
 
 def main(midi_file):
 
@@ -584,6 +594,33 @@ def main(midi_file):
 
     new_melody_stream.write('midi', fp="Corrected_Recordings/corrected_midi_file.mid")
     harmony_score.write('midi', fp="Harmony_Files/harmony_midi_file.mid")
+
+    ### Start communication with Ableton Live
+    midiout_melody = rtmidi.MidiOut()
+    midiout_harmony = rtmidi.MidiOut()
+    
+    available_ports = midiout_melody.get_ports()
+    print(available_ports)
+    if available_ports:
+        
+        midiout_melody.open_port(1)
+        midiout_harmony.open_port(2)
+        
+        melody_thread = threading.Thread(target=send_midi_to_ableton, args=("Corrected_Recordings/corrected_midi_file.mid", midiout_melody))
+        harmony_thread = threading.Thread(target=send_midi_to_ableton, args=("Harmony_Files/harmony_midi_file.mid", midiout_harmony))
+            
+        melody_thread.start()
+        harmony_thread.start()
+            
+        melody_thread.join()
+        harmony_thread.join()
+
+        midiout_melody.close_port()
+        midiout_harmony.close_port()
+  
+    else:
+        print("No available MIDI ports.")
+    
 
 
 if __name__ == '__main__':
