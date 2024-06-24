@@ -562,6 +562,44 @@ def midi_to_ableton(midi_file_path, midiout):
         if not msg.is_meta:
             midiout.send_message(msg.bytes())
 
+### Function to generate a new melody based on the harmony ###
+
+def generate_melody(key_signature, harmony_score):
+    
+    new_melody = stream.Part()
+
+    
+    quarter_length = 0.5  
+
+    
+    total_duration = 16 * quarter_length  * 2.5
+
+    current_offset = 0.0
+    while current_offset < total_duration:
+        #### Choose a random note within the key signature that fits with the harmony
+        scale_notes = list(key_signature.getPitches())
+        melody_pitch = random.choice(scale_notes)
+        melody_note = note.Note(melody_pitch) 
+        note_durations = [0.5, 1, 1.5, 2]  #
+        note_duration_probs = [0.4, 0.3, 0.2, 0.1]  
+        note_duration = random.choices(note_durations, weights=note_duration_probs)[0]
+        melody_note.quarterLength = note_duration
+        current_offset += note_duration
+
+        #### Check if the note fits with the current harmony
+        harmony_chords = [chord.Chord(chord_obj.pitches) for chord_obj in harmony_score.flat.getElementsByClass('Chord')]
+        harmony_chord_at_offset = harmony_score.flat.getElementsByOffset(current_offset, classList=['Chord'])
+
+        if harmony_chord_at_offset:
+            harmony_chord = harmony_chord_at_offset[0]
+            if melody_note not in [p.pitchClass for p in harmony_chord.pitches]:
+                #### If the generated note does not fit the current chord, it skips
+                continue
+
+        new_melody.append(melody_note)
+        
+
+    return new_melody
 
 def main(midi_file):
 
@@ -589,15 +627,20 @@ def main(midi_file):
     harmony_score.insert(0, harmonized)
 
     new_melody_stream = readjust_melody(melody, harmony_score)
+    generated_melody = generate_melody(key_signature, harmony_score)
 
     fade_effects(new_melody_stream, harmony_score)
-
+    fade_effects(generated_melody, harmony_score)
+    
+    generated_melody.write('midi', fp="Generated_Melodies/generated_melody.mid")
     new_melody_stream.write('midi', fp="Corrected_Recordings/corrected_midi_file.mid")
     harmony_score.write('midi', fp="Harmony_Files/harmony_midi_file.mid")
 
     ### Start communication with Ableton Live
     midiout_melody = rtmidi.MidiOut()
     midiout_harmony = rtmidi.MidiOut()
+    midiout_generated= rtmidi.MidiOut()
+    
     
     available_ports = midiout_melody.get_ports()
     print(available_ports)
@@ -616,6 +659,18 @@ def main(midi_file):
         harmony_thread.join()
 
         midiout_melody.close_port()
+        midiout_generated.open_port(1)
+
+        melody_thread = threading.Thread(target=midi_to_ableton, args=("Generated_Melodies/generated_melody.mid", midiout_generated))
+        harmony_thread = threading.Thread(target=midi_to_ableton, args=("Harmony_Files/harmony_midi_file.mid", midiout_harmony))
+
+        melody_thread.start()
+        harmony_thread.start()
+
+        melody_thread.join()
+        harmony_thread.join()
+
+        midiout_generated.close_port()
         midiout_harmony.close_port()
   
     else:
