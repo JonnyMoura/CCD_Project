@@ -433,7 +433,7 @@ def readjust_melody(melody_stream, harmony_stream, rhythmic_grid='8th'):
                 if melody_pitch < harmony_pitch:
                     melody_pitch.octave += 1  ### Ensuring melody is higher in octave than harmony
                 ### If combined duration is 0.5 or smaller (8th note or smaller)
-                if combined_quarter_length <= 0.5:
+                if combined_quarter_length < 0.5:
                     if readjusted_melody and isinstance(readjusted_melody[-1], note.Note):
                         readjusted_melody[-1].quarterLength += combined_quarter_length
                 else:
