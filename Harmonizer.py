@@ -501,24 +501,24 @@ def readjust_melody(melody_stream, harmony_stream, rhythmic_grid='8th'):
 
 ### Functions to apply fade effects to the melody and harmony streams ###
 
-def apply_fade_effects(melody_stream, harmony_stream, fade_in_duration=0.35, fade_out_duration=0.35):
+def fade_effects(melody_stream, harmony_stream, fade_in_duration=0.35, fade_out_duration=0.35):
     melody_stream = melody_stream.flat
     harmony_stream = harmony_stream.flat
 
     #### Applying fade effects to melody stream
     for m_note in melody_stream.getElementsByClass('Note'):
-        apply_fade_to_note(m_note, fade_in_duration, fade_out_duration)
+        fade_to_note(m_note, fade_in_duration, fade_out_duration)
 
     #### Applying fade effects to harmony stream
     for h_note in harmony_stream.getElementsByClass(['Note', 'Chord']):
         if isinstance(h_note, note.Note):
-            apply_fade_to_note(h_note, fade_in_duration, fade_out_duration)
+            fade_to_note(h_note, fade_in_duration, fade_out_duration)
         elif isinstance(h_note, chord.Chord):
             for chord_note in h_note:
-                apply_fade_to_note(chord_note, fade_in_duration, fade_out_duration)
+                fade_to_note(chord_note, fade_in_duration, fade_out_duration)
 
 
-def apply_fade_to_note(note_obj, fade_in_duration, fade_out_duration):
+def fade_to_note(note_obj, fade_in_duration, fade_out_duration):
     start_velocity = 40
     end_velocity = 80
 
@@ -556,7 +556,7 @@ def apply_fade_to_note(note_obj, fade_in_duration, fade_out_duration):
 
     note_obj.volume.velocity = current_velocity
 
-def send_midi_to_ableton(midi_file_path, midiout):
+def midi_to_ableton(midi_file_path, midiout):
     mid = MidiFile(midi_file_path)
     for msg in mid.play():
         if not msg.is_meta:
@@ -590,7 +590,7 @@ def main(midi_file):
 
     new_melody_stream = readjust_melody(melody, harmony_score)
 
-    apply_fade_effects(new_melody_stream, harmony_score)
+    fade_effects(new_melody_stream, harmony_score)
 
     new_melody_stream.write('midi', fp="Corrected_Recordings/corrected_midi_file.mid")
     harmony_score.write('midi', fp="Harmony_Files/harmony_midi_file.mid")
@@ -606,8 +606,8 @@ def main(midi_file):
         midiout_melody.open_port(1)
         midiout_harmony.open_port(2)
 
-        melody_thread = threading.Thread(target=send_midi_to_ableton, args=("Corrected_Recordings/corrected_midi_file.mid", midiout_melody))
-        harmony_thread = threading.Thread(target=send_midi_to_ableton, args=("Harmony_Files/harmony_midi_file.mid", midiout_harmony))
+        melody_thread = threading.Thread(target=midi_to_ableton, args=("Corrected_Recordings/corrected_midi_file.mid", midiout_melody))
+        harmony_thread = threading.Thread(target=midi_to_ableton, args=("Harmony_Files/harmony_midi_file.mid", midiout_harmony))
             
         melody_thread.start()
         harmony_thread.start()
