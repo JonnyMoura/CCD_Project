@@ -556,6 +556,8 @@ def fade_to_note(note_obj, fade_in_duration, fade_out_duration):
 
     note_obj.volume.velocity = current_velocity
 
+### Function to send MIDI messages to Ableton Live ###
+
 def midi_to_ableton(midi_file_path, midiout):
     mid = MidiFile(midi_file_path)
     for msg in mid.play():
