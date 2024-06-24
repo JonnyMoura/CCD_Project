@@ -340,9 +340,9 @@ def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
 
                     if scale_degree == rn.scaleDegree:  ### If note corresponds to the scale degree of the chord
                         match_count += 2
-                    elif first_note.pitch in rn.pitches:  ### If note is in the chord
+                    elif first_note.pitch.pitchClass in [p.pitchClass for p in rn.pitches]:  ### If note is in the chord
                         match_count += 1
-
+        
         if match_count > best_match_count:
 
             best_match_count = match_count
@@ -364,7 +364,7 @@ def harmonize_melody(melody, key_signature, genre, progressions, rhythms):
 
             for note_or_rest in measure.notesAndRests:
                 if isinstance(note_or_rest, note.Note):
-                    if note_or_rest.pitch not in rn.pitches and get_scale_degree(note_or_rest, key_signature) != rn.scaleDegree:
+                    if note_or_rest.pitch.pitchClass not in [p.pitchClass for p in rn.pitches] and get_scale_degree(note_or_rest, key_signature) != rn.scaleDegree:
                         if random.random() < 0.2:  ### Replacing one chord of the progression with a random chord that fits
                             fitting_chord = find_fitting_chord(note_or_rest, key_signature, genre, progressions)
                             if fitting_chord:
