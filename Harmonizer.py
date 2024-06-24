@@ -497,8 +497,7 @@ def readjust_melody(melody_stream, harmony_stream, rhythmic_grid='8th'):
 
 ### Functions to apply fade effects to the melody and harmony streams ###
 
-def apply_fade_effects(melody_stream, harmony_stream, fade_in_duration=0.4, fade_out_duration=0.4):
-
+def apply_fade_effects(melody_stream, harmony_stream, fade_in_duration=0.35, fade_out_duration=0.35):
     melody_stream = melody_stream.flat
     harmony_stream = harmony_stream.flat
 
@@ -527,15 +526,31 @@ def apply_fade_to_note(note_obj, fade_in_duration, fade_out_duration):
     fade_out_start = end_offset - fade_out_duration
     fade_out_end = end_offset
 
-    if start_offset <= fade_in_end:
-        fade_in_ratio = min(1.0, (fade_in_end - start_offset) / fade_in_duration)
-        fade_in_velocity = int(start_velocity + fade_in_ratio * (end_velocity - start_velocity))
-        note_obj.volume.velocity = fade_in_velocity
+    current_velocity = start_velocity
 
+    ### Apply gradual fade-in effect
+    if start_offset <= fade_in_end:
+        num_steps = int(fade_in_duration * 100)
+        velocity_step = (end_velocity - start_velocity) / num_steps
+        for i in range(num_steps):
+            current_offset = start_offset + (i / num_steps) * fade_in_duration
+            if current_offset >= fade_in_end:
+                break
+            current_velocity = int(start_velocity + i * velocity_step)
+            note_obj.volume.velocity = current_velocity
+
+    ### Apply gradual fade-out effect
     if fade_out_start >= start_offset:
-        fade_out_ratio = min(1.0, (end_offset - fade_out_start) / fade_out_duration)
-        fade_out_velocity = int(end_velocity - fade_out_ratio * (end_velocity - start_velocity))
-        note_obj.volume.velocity = fade_out_velocity
+        num_steps = int(fade_out_duration * 100)
+        velocity_step = (end_velocity - start_velocity) / num_steps
+        for i in range(num_steps):
+            current_offset = fade_out_start + (i / num_steps) * fade_out_duration
+            if current_offset >= fade_out_end:
+                break
+            current_velocity = int(end_velocity - i * velocity_step)
+            note_obj.volume.velocity = current_velocity
+
+    note_obj.volume.velocity = current_velocity
 
 
 def main(midi_file):
