@@ -243,7 +243,7 @@ def correct_melody(melody_stream, time_signature='4/4'):
     melody_with_bars = stream.Stream()
     melody_with_bars.append(meter.TimeSignature(time_signature))
 
-    # Variables to track current measure and its accumulated length
+    ### Variables to track current measure and its accumulated length
     current_measure = stream.Measure()
     current_measure_length = 0
 
@@ -252,7 +252,7 @@ def correct_melody(melody_stream, time_signature='4/4'):
         current_measure.append(note_or_rest)
         current_measure_length += note_or_rest.duration.quarterLength
 
-        # If the current measure reaches the time signature's length (4/4)
+       
         if current_measure_length >= meter.TimeSignature(time_signature).barDuration.quarterLength:
             melody_with_bars.append(current_measure)
             current_measure = stream.Measure()
@@ -605,7 +605,7 @@ def main(midi_file):
         
         midiout_melody.open_port(1)
         midiout_harmony.open_port(2)
-        
+
         melody_thread = threading.Thread(target=send_midi_to_ableton, args=("Corrected_Recordings/corrected_midi_file.mid", midiout_melody))
         harmony_thread = threading.Thread(target=send_midi_to_ableton, args=("Harmony_Files/harmony_midi_file.mid", midiout_harmony))
             
